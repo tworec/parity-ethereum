@@ -94,12 +94,18 @@ impl KeyPair {
 #[cfg(test)]
 mod tests {
 	use std::str::FromStr;
-	use {KeyPair, Secret};
+	use {KeyPair, Secret, Public, public_to_address};
 
 	#[test]
 	fn from_secret() {
 		let secret = Secret::from_str("a100df7a048e50ed308ea696dc600215098141cb391e9527329df289f9383f65").unwrap();
 		let _ = KeyPair::from_secret(secret).unwrap();
+	}
+
+	#[test]
+	fn from_public() {
+		let public = Public::from_str("8ce0db0b0359ffc5866ba61903cc2518c3675ef2cf380a7e54bde7ea20e6fa1ab45b7617346cd11b7610001ee6ae5b0155c41cad9527cbcdff44ec67848943a4").unwrap();
+		assert_eq!(format!("{:?}", public_to_address(&public)), "0x5b073e9233944b5e729e46d618f0d8edf3d9c34a");
 	}
 
 	#[test]

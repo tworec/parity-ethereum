@@ -3,4 +3,6 @@
 members = [
 	"ethkey",
 	"ethstore",
+	"ethkey/cli",
+	"ethstore/cli",
 ]

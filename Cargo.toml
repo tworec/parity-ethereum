@@ -1,8 +1,8 @@
 [workspace]
 
 members = [
-	"ethkey",
-	"ethstore",
-	"ethkey/cli",
-	"ethstore/cli",
+	"accounts/ethkey",
+	"accounts/ethkey/cli",
+	"accounts/ethstore",
+	"accounts/ethstore/cli",
 ]

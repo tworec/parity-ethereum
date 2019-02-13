@@ -32,6 +32,7 @@ use std::{env, fmt, process, io, sync};
 use docopt::Docopt;
 use ethkey::{KeyPair, Random, Brain, BrainPrefix, Prefix, Error as EthkeyError, Generator, sign, verify_public, verify_address, brain_recover};
 use rustc_hex::{FromHex, FromHexError};
+use ethkey::public_to_address;
 
 const USAGE: &'static str = r#"
 Parity Ethereum keys generator.
@@ -42,6 +43,7 @@ Usage:
     ethkey generate random [options]
     ethkey generate prefix <prefix> [options]
     ethkey sign <secret> <message>
+     ethkey pub2addr <public>
     ethkey verify public <public> <signature> <message>
     ethkey verify address <address> <signature> <message>
     ethkey recover <address> <known-phrase>
@@ -59,6 +61,7 @@ Commands:
     generate random    Generates new random Ethereum key.
     generate prefix    Random generation, but address must start with a prefix ("vanity address").
     sign               Sign message using a secret key.
+    pub2addr		   convert pub2addr
     verify             Verify signer of the signature by public key or address.
     recover            Try to find brain phrase matching given address from partial phrase.
 "#;
@@ -70,6 +73,7 @@ struct Args {
 	cmd_random: bool,
 	cmd_prefix: bool,
 	cmd_sign: bool,
+	cmd_pub2addr: bool,
 	cmd_verify: bool,
 	cmd_public: bool,
 	cmd_address: bool,
@@ -245,6 +249,10 @@ fn execute<S, I>(command: I) -> Result<String, Error> where I: IntoIterator<Item
 		let message = args.arg_message.parse().map_err(|_| EthkeyError::InvalidMessage)?;
 		let signature = sign(&secret, &message)?;
 		Ok(format!("{}", signature))
+	} else if args.cmd_pub2addr {
+		let public = args.arg_public.parse().map_err(|_| EthkeyError::InvalidPublic)?;
+		Ok(format!("{:?}", public_to_address(&public)))
+
 	} else if args.cmd_verify {
 		let signature = args.arg_signature.parse().map_err(|_| EthkeyError::InvalidSignature)?;
 		let message = args.arg_message.parse().map_err(|_| EthkeyError::InvalidMessage)?;
